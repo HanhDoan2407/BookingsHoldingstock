@@ -1,0 +1,147 @@
+======================================================================
+1. DATA
+======================================================================
+Sample: 2024-09-20 to 2025-05-16  (164 observations)
+count     164.000000
+mean     4773.378049
+std       336.602950
+min      4064.000000
+25%      4529.250000
+50%      4807.125000
+75%      5035.250000
+max      5317.000000
+
+======================================================================
+2. ELEMENTARY STATISTICAL ANALYSIS
+======================================================================
+[saved figure] fig01_bkng_close_trend.png
+[saved figure] fig02_bkng_close_hist.png
+bkng_close: mean=4773.38, median=4807.12, std=336.60, skew=-0.3494, kurt=2.0306
+Jarque-Bera (close) = 9.76, p = 0.007601
+[saved figure] fig03_bkng_close_qq.png
+[saved figure] fig04_bkng_logret_trend.png
+[saved figure] fig05_bkng_logret_hist.png
+bkng_logret: mean=0.001709, std=0.019066, skew=0.5385, kurt=7.6798
+Jarque-Bera (logret) = 157.58, p = 0.000000
+[saved figure] fig06_bkng_logret_qq.png
+[saved figure] fig07_overlay_close_logret.png
+
+======================================================================
+3. AUTOCORRELATION ANALYSIS
+======================================================================
+[saved figure] fig08_correlogram_close.png
+Correlogram of bkng_close (first 5 lags):
+ lag       AC       PAC     Q-Stat  Prob
+   1 0.943155  0.943155 148.569785   0.0
+   2 0.893017  0.031468 282.585779   0.0
+   3 0.844121 -0.011856 403.071348   0.0
+   4 0.789950 -0.072864 509.248577   0.0
+   5 0.742117  0.022279 603.546068   0.0
+Q-stat lag1 = 148.57, p = 0.0000
+[saved figure] fig09_correlogram_logret.png
+
+Correlogram of bkng_logret (first 5 lags):
+ lag        AC       PAC   Q-Stat     Prob
+   1 -0.053875 -0.053875 0.484769 0.486270
+   2  0.050157  0.047392 0.907537 0.635230
+   3  0.029536  0.034843 1.055053 0.787934
+   4 -0.026428 -0.025615 1.173891 0.882378
+   5 -0.001988 -0.007970 1.174567 0.947294
+Q-stat lag1 = 0.48, p = 0.4863
+[saved figure] fig12_correlogram_sq_logret.png
+
+Correlogram of squared log returns (first 5 lags):
+ lag        AC       PAC   Q-Stat     Prob
+   1  0.033619  0.033619 0.188770 0.663942
+   2  0.032757  0.031663 0.369092 0.831482
+   3  0.056925  0.054912 0.917040 0.821314
+   4  0.157124  0.153334 5.117713 0.275431
+   5 -0.027923 -0.040846 5.251215 0.385997
+
+======================================================================
+4. AUGMENTED DICKEY-FULLER (ADF) UNIT ROOT TESTS
+======================================================================
+
+--- BKNG_CLOSE ---
+  [ n] ADF t-stat = 0.9581   crit(1%,5%,10%) = -2.5758, -1.9414, -1.6162   FAIL TO REJECT H0 (unit root)
+  [ c] ADF t-stat = -1.9889   crit(1%,5%,10%) = -3.4381, -2.8641, -2.5681   FAIL TO REJECT H0 (unit root)
+  [ct] ADF t-stat = -1.9962   crit(1%,5%,10%) = -3.9638, -3.4126, -3.1279   FAIL TO REJECT H0 (unit root)
+
+--- BKNG_LOGRET ---
+  [ n] ADF t-stat = -13.3212   crit(1%,5%,10%) = -2.5758, -1.9414, -1.6162   REJECT H0 (stationary)
+  [ c] ADF t-stat = -13.3847   crit(1%,5%,10%) = -3.4381, -2.8641, -2.5681   REJECT H0 (stationary)
+  [ct] ADF t-stat = -13.3528   crit(1%,5%,10%) = -3.9638, -3.4126, -3.1279   REJECT H0 (stationary)
+
+======================================================================
+5. ARIMA MODELING
+======================================================================
+
+--- 5.1 Identification: trial ARMA(1,1) on differenced series ---
+  const = 7.5088  (se=6.7435, t=1.1135, p=0.2672)
+  AR(1) = -0.0376  (se=0.9428, t=-0.0399, p=0.9682)
+  MA(1) = -0.0136  (se=0.9155, t=-0.0148, p=0.9882)
+  -> AR(1)/MA(1) statistically insignificant => over-specified, matches paper's finding.
+
+--- 5.2 Adopted specification: ARIMA(0,1,0), i.e. Random Walk ---
+  drift (constant) = 7.6871  (se=6.9929, t=1.0993, p=0.2733)
+  R-squared = 0.000000
+  -> constant statistically insignificant at 5% => Random Walk WITHOUT drift, matches paper.
+[saved figure] fig13_arma11_results.png
+[saved figure] fig14_arima010_results.png
+
+--- 5.3 Model diagnostics: residual autocorrelation ---
+[saved figure] fig15_correlogram_residuals.png
+ lag        AC       PAC   Q-Stat     Prob
+   1 -0.051273 -0.051273 0.436442 0.508845
+   2  0.029143  0.026584 0.578320 0.748892
+   3  0.048492  0.051481 0.973584 0.807643
+   4 -0.016693 -0.012491 1.020719 0.906638
+   5  0.000988 -0.003432 1.020885 0.960864
+Q-stat lag1 = 0.436, p = 0.5088 -> fail to reject H0 of no autocorrelation (white noise), matches paper.
+
+Breusch-Godfrey Serial Correlation LM Test (2 lags): LM=0.5452, p=0.7614, F=0.2685, F-p=0.7649
+[saved figure] fig16_breusch_godfrey.png
+
+--- 5.4 Heteroskedasticity: ARCH-LM test ---
+ARCH-LM (1 lag): LM=0.1233, p=0.7254, F=0.1219, F-p=0.7274
+-> fail to reject H0 of no ARCH effects
+[saved figure] fig17_arch_test.png
+[saved figure] fig18_residual_actual_fitted.png
+
+--- 5.5 Normality of ARIMA(0,1,0) residuals ---
+Jarque-Bera = 94.61, p = 0.000000, skew=0.3915, kurtosis=6.6492
+[saved figure] fig19_residuals_hist_jb.png
+
+--- 5.6 Stability: Chow breakpoint test ---
+Breakpoint date used: 2025-01-15 (index 78 of 163)
+Chow F-stat = 0.0407, p = 0.8405
+-> fail to reject H0 of no structural break
+[saved figure] fig20_chow_test.png
+
+======================================================================
+5.7 FORECASTING
+======================================================================
+Forecast horizon: 15 trading days (2025-04-28 to 2025-05-16)
+RMSE=330.0694  MAE=309.4167  MAPE=5.9625%  Theil U=0.033048  Bias Proportion=0.8788
+[saved figure] fig21_forecast_eval_stats.png
+[saved figure] fig22_actual_vs_forecast.png
+
+======================================================================
+6. CONCLUSION
+======================================================================
+
+Over 2024-09-20 to 2025-05-16 (164 obs, real BKNG
+data, rescaled x25 to the pre-split nominal level for comparability with
+the original paper), BKNG's closing price series is non-stationary
+(ADF fails to reject a unit root at all three specifications), while
+first-differenced log returns are stationary and close to white noise.
+An ARMA(1,1) trial on the differenced series was over-specified (both
+AR(1) and MA(1) insignificant, p > 0.9), so the parsimonious ARIMA(0,1,0)
+"random walk" model was adopted, matching the original EViews-based study.
+The constant/drift term is statistically insignificant (p = 0.273), so the
+series behaves as a random walk WITHOUT drift. Residual diagnostics
+(Ljung-Box, Breusch-Godfrey) show no remaining autocorrelation; the
+ARCH-LM test shows no volatility clustering; the Chow breakpoint test
+shows no structural break; and residuals are leptokurtic but not normal
+(a standard stylized fact of financial returns) -- all consistent with
+the original paper's findings.
