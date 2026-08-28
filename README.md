@@ -1,15 +1,8 @@
-# Booking Holdings (BKNG) Stock Volatility & ARIMA Modeling — Python Replication
-
-A Python/pandas/numpy/scipy replication of an EViews-based time-series project analyzing
-**Booking Holdings Inc. (BKNG)** stock price behavior and building a Box–Jenkins ARIMA
-forecasting model. Originally written for *4ST441 — Statistical Methods and Capital Markets*
-(Prague University of Economics and Business); this version reimplements the full workflow
-in Python for a portfolio piece.
+# Analysis of Booking Holdings Inc. Stock Volatility and ARIMA Modeling with Python
 
 **[Open the notebook →](./BKNG_ARIMA_Analysis.ipynb)**
 
 ---
-
 ## What this project does
 
 Following the classical **Box–Jenkins methodology**:
@@ -44,17 +37,9 @@ Two things changed between the original 2026-dated paper and this replication:
   2026**. Current price data from Yahoo Finance is split-adjusted, so all prices in this
   project are **rescaled ×25** back to the pre-split nominal level (matching the paper's
   original $3,000–$5,800 range) for direct comparability.
-- **Sample window.** The original paper covers **Jan 2, 2024 – May 16, 2025** (~501
-  trading days). This repo ships real BKNG data for **Sep 20, 2024 – May 16, 2025** (164
-  trading days) — the longest window retrievable without a live internet connection when
-  this was built. All figures and statistics below are computed on this **real, unmodified**
+- **Sample window.** The dataset covers for **Sep 20, 2024 – May 16, 2025** (164
+  trading days) — All figures and statistics below are computed on this **real, unmodified**
   price data (not simulated).
-
-To reproduce the exact original window, run the first code cell in the notebook (`Option A`)
-with an internet connection — it pulls the full Jan 2024–May 2025 range from Yahoo Finance
-via `yfinance` in one call. Everything downstream (every cell, every figure) works unchanged
-regardless of which window you load, since the pipeline operates on `data/*.csv`, not a
-hardcoded date range.
 
 ---
 
@@ -204,18 +189,6 @@ EViews-based paper almost exactly, despite the shorter sample window used here.
     ├── run_analysis_part4.py          <- Part 4: forecasting + conclusion
     └── build_notebook.py              <- assembles the four run_analysis_*.py scripts into the .ipynb
 ```
-
-## Running it yourself
-
-```bash
-pip install numpy pandas scipy matplotlib
-jupyter notebook BKNG_ARIMA_Analysis.ipynb
-```
-
-To reproduce the paper's exact Jan 2024–May 2025 window with live data, install `yfinance`
-(`pip install yfinance`) and uncomment the "Option A" cell at the top of the notebook — no
-other code needs to change.
-
 ## Tools & techniques
 
 `Python` · `pandas` · `NumPy` · `SciPy` (optimization, distributions) · `Matplotlib` ·
