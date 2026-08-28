@@ -164,9 +164,7 @@ BKNG's closing price behaves as a classic **non-stationary random walk**: the AD
 fails to reject a unit root at every specification, but first-differenced log returns are
 stationary and statistically indistinguishable from white noise. The Box–Jenkins procedure
 converges on the simplest possible model, `ARIMA(0,1,0)` without drift — past price
-movements carry no linear predictive information about future returns. This is consistent
-with the weak-form Efficient Market Hypothesis and matches the conclusion of the original
-EViews-based paper almost exactly, despite the shorter sample window used here.
+movements carry no linear predictive information about future returns.
 
 ---
 
